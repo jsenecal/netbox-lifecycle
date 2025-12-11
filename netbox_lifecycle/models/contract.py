@@ -170,6 +170,31 @@ class SupportContractAssignment(PrimaryModel):
             return self.end
         return self.contract.end
 
+    @property
+    def status(self):
+        from datetime import date as date_class
+
+        from netbox_lifecycle.constants import (
+            CONTRACT_STATUS_ACTIVE,
+            CONTRACT_STATUS_EXPIRED,
+            CONTRACT_STATUS_FUTURE,
+            CONTRACT_STATUS_UNSPECIFIED,
+        )
+
+        today = date_class.today()
+
+        # Check if contract starts in the future
+        if self.contract.start and self.contract.start > today:
+            return CONTRACT_STATUS_FUTURE
+
+        # Use assignment's end_date property (falls back to contract.end)
+        end = self.end_date
+        if end is None:
+            return CONTRACT_STATUS_UNSPECIFIED
+        if end < today:
+            return CONTRACT_STATUS_EXPIRED
+        return CONTRACT_STATUS_ACTIVE
+
     def get_device_status_color(self):
         if self.device is None:
             return
