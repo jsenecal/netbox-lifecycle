@@ -2,7 +2,6 @@
 #  This file serves as a base configuration for testing purposes  #
 #  only. It is not intended for production use.                   #
 ###################################################################
-from netbox.configuration import API_TOKEN_PEPPERS
 
 ALLOWED_HOSTS = ['*']
 
