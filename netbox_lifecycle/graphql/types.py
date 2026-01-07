@@ -11,7 +11,7 @@ from dcim.graphql.types import (
     ModuleType,
 )
 from virtualization.graphql.types import VirtualMachineType
-from netbox.graphql.types import NetBoxObjectType
+from netbox.graphql.types import PrimaryObjectType
 from .filters import *
 
 from netbox_lifecycle import models
@@ -28,12 +28,12 @@ __all__ = (
 
 
 @strawberry_django.type(models.Vendor, fields='__all__', filters=VendorFilter)
-class VendorType(NetBoxObjectType):
+class VendorType(PrimaryObjectType):
     name: str
 
 
 @strawberry_django.type(models.SupportSKU, fields='__all__', filters=SupportSKUFilter)
-class SupportSKUType(NetBoxObjectType):
+class SupportSKUType(PrimaryObjectType):
 
     sku: str
     manufacturer: ManufacturerType
@@ -42,7 +42,7 @@ class SupportSKUType(NetBoxObjectType):
 @strawberry_django.type(
     models.SupportContract, fields='__all__', filters=SupportContractFilter
 )
-class SupportContractType(NetBoxObjectType):
+class SupportContractType(PrimaryObjectType):
 
     vendor: VendorType
     contract_id: str
@@ -52,7 +52,7 @@ class SupportContractType(NetBoxObjectType):
 
 
 @strawberry_django.type(models.License, fields='__all__', filters=LicenseFilter)
-class LicenseType(NetBoxObjectType):
+class LicenseType(PrimaryObjectType):
 
     manufacturer: ManufacturerType
     name: str
@@ -63,7 +63,7 @@ class LicenseType(NetBoxObjectType):
     fields='__all__',
     filters=SupportContractAssignmentFilter,
 )
-class SupportContractAssignmentType(NetBoxObjectType):
+class SupportContractAssignmentType(PrimaryObjectType):
     contract: SupportContractType
     sku: SupportSKUType | None
     device: DeviceType | None
@@ -76,7 +76,7 @@ class SupportContractAssignmentType(NetBoxObjectType):
 @strawberry_django.type(
     models.LicenseAssignment, fields='__all__', filters=LicenseAssignmentFilter
 )
-class LicenseAssignmentType(NetBoxObjectType):
+class LicenseAssignmentType(PrimaryObjectType):
     license: LicenseType
     vendor: VendorType
     device: DeviceType | None
@@ -87,7 +87,7 @@ class LicenseAssignmentType(NetBoxObjectType):
 @strawberry_django.type(
     models.HardwareLifecycle, fields='__all__', filters=HardwareLifecycleFilter
 )
-class HardwareLifecycleType(NetBoxObjectType):
+class HardwareLifecycleType(PrimaryObjectType):
     assigned_object_type: (
         Annotated["ContentTypeType", strawberry.lazy('netbox.graphql.types')] | None
     )

@@ -1,5 +1,6 @@
 exclude = [
-    'contrib'
+    '.github',
+    'contrib',
 ]
 line-length = 120
 target-version = "py310"
